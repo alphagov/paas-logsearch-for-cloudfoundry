@@ -15,6 +15,15 @@
           }
         },
         {
+          "aucioneer_lrps": {
+            "match_pattern": "regex",
+            "match": "^(auctioneer.data.lrps.*)$",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": null
+            }
+        },
+        {
           "raw_for_string_significant__simple_fields": {
             "match_pattern": "regex",
             "match": "^(@level|@type|@input|@index_type)$",
