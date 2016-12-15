@@ -6,6 +6,18 @@ var uuid = require('uuid');
 
 module.exports = function (kibana) {
   return new kibana.Plugin({
+  
+  uiExports: {
+    app: {
+      title: 'User',
+      main: 'plugins/authentication/user',
+      icon: 'plugins/authentication/user_icon.png',
+
+      autoload: [].concat(kibana.autoload.styles, 'ui/chrome', 'angular')
+    }
+
+  },
+  
   /*
   This will set the name of the plugin and will be used by the server for
   namespacing purposes in the configuration. In Hapi you can expose methods and
@@ -84,7 +96,7 @@ module.exports = function (kibana) {
   */
   init: function (server, options) {
     var config = server.config();
-    var isSecure = process.env.NODE_ENV !== 'development';
+    var isSecure = (process.env.USE_HTTPS) ? process.env.USE_HTTPS : true;
 
     server.log(['debug', 'authentication'], JSON.stringify(config.get('authentication')));
 
@@ -344,8 +356,8 @@ function filterQuery(payload, cached) {
     bool.must = [bool.must];
   }
   bool.must.push(
-    {'terms': {'@source.space_id': cached.account.spaceIds}},
-    {'terms': {'@source.org_id': cached.account.orgIds}}
+    {'terms': {'@cf.space_id': cached.account.spaceIds}},
+    {'terms': {'@cf.org_id': cached.account.orgIds}}
   );
   return payload;
 }

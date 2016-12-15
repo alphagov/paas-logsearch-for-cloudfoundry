@@ -31,6 +31,10 @@ jobs:
       elasticsearch_index_type: "%{@type}"
       filters:
       - logsearch-for-cf: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+      deployment_dictionary: /var/vcap/jobs/logsearch-for-cloudfoundry-filters/config/deployment_lookup.yml
+      deployment_name:
+        cf: cf
+        diego: cf-diego
 
 - name: maintenance
   templates:
@@ -58,6 +62,23 @@ jobs:
         system_domain: sys.cf.example
         admin_client_secret: admin_client_secret
 
+- name: upload-kibana-objects
+  lifecycle: errand
+  release: logsearch-for-cloudfoundry
+  instances: 1
+  templates:
+  - {name: upload-kibana-objects, release: logsearch-for-cloudfoundry}
+  networks:
+  - name: default
+  resource_pool: errand
+  properties:
+    elasticsearch:
+      host: (( grab jobs.elasticsearch_master.networks.default.static_ips.[0] ))
+      port: 9200
+    kibana_objects:
+      upload_data_files:
+        - /var/vcap/packages/logsearch-for-cloudfoundry-filters/kibana-objects-bulk-json
+
 - name: kibana
   templates:
   - (( merge ))
@@ -71,5 +92,8 @@ jobs:
       - CF_API_URI: https://api.sys.cf.example
       - CF_SYSTEM_ORG: system # Org Managers of this org get admin access
       - REDIS_HOST: my_redis_host # Redis host to use for sessions
+      - SESSION_EXPIRATION_MS: 43200000
+      - NODE_ENV: production
+      - USE_HTTPS: false
       plugins:
       - auth: /var/vcap/packages/kibana-auth-plugin/kibana-auth-plugin.tar.gz

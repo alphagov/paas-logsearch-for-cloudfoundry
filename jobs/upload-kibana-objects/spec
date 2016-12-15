@@ -1,0 +1,15 @@
+---
+name: upload-kibana-objects
+packages:
+- logsearch-for-cloudfoundry-filters
+templates:
+  bin/run: bin/run
+
+properties:
+  kibana_objects.upload_data_files:
+    description: "List of text files to put in API endpoint /_bulk"
+    default: []
+  elasticsearch.host:
+    description: Elasticsearch host
+  elasticsearch.port:
+    description: Elasticsearch port

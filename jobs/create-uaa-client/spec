@@ -8,11 +8,16 @@ properties:
   create-uaa-client.app_name:
     description: "The Kibana log dashboard app name ( eg defaults to: logs )"
     default: logs
+  create-uaa-client.elk_domain:
+    description: "The Kibana dashboard domain"
   create-uaa-client.oauth2_client_id:
     description: "The UAA kibana oauth2 client id"
     default: kibana_oauth2_client
   create-uaa-client.oauth2_client_secret:
     description: "The UAA kibana oauth2 client id's secret"
+  create-uaa-client.oauth2_autoapprove:
+    description: ""
+    default: false
 
   create-uaa-client.cloudfoundry.system_domain:
     description: "The Elastic Runtime system domain ( eg: system.10.244.0.34.xip.io )"

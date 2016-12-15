@@ -23,6 +23,9 @@ properties:
     default: kibana_oauth2_client
   cf-kibana.oauth2_client_secret:
     description: "The UAA kibana oauth2 client id's secret"
+  cf-kibana.use_existing_client:
+    description: "Set true to use existing UAA client for Kibana"
+    default: false
   cf-kibana.logsearch_space:
     description: "Space where Kibana will be deployed"
     default: logsearch
@@ -60,6 +63,15 @@ properties:
   cf-kibana.shard_timeout:
     description: "Time in milliseconds for Elasticsearch to wait for responses from shards. Set to 0 to disable"
     default: 30000
+  cf-kibana.plugins:
+    description: "a list of key-value pairs of plugins. e.g. Kibana-auth: /var/vcap/packagaes/kibana/kibana-auth"
+    default: []
+  cf-kibana.config_options:
+    description: "Additional options to append to kibana configuration (YAML format)."
+    default: ~
+  cf-kibana.use_https:
+    description: "A boolean indicating whether or not you want the redirect_uri to be forced to https"
+    default: true
 
   cloudfoundry.api_endpoint:
     description: "The CF API URL"

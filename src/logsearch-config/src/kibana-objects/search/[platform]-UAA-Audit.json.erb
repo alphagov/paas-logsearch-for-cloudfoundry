@@ -1,0 +1,88 @@
+<% require 'json' %>
+{
+  "title": "[platform] UAA Audit",
+  "description": "",
+  "hits": 0,
+  "columns": [
+    "@source.name",
+    "uaa.audit.type",
+    "uaa.audit.origin",
+    "uaa.audit.data"
+  ],
+  "sort": [
+    "@timestamp",
+    "desc"
+  ],
+  "version": 1,
+  "kibanaSavedObjectMeta": {
+    "searchSourceJSON": "<%= JSON.parse(<<'ENDOFFJSON').to_json.gsub(/"/) { '\"' }
+    {
+      "index": "logs-platform-*",
+      "filter": [
+        {
+          "meta": {
+            "negate": false,
+            "index": "logs-platform-*",
+            "key": "@source.component",
+            "value": "uaa",
+            "disabled": false,
+            "alias": null
+          },
+          "query": {
+            "match": {
+              "@source.component": {
+                "query": "uaa",
+                "type": "phrase"
+              }
+            }
+          },
+          "$state": {
+            "store": "appState"
+          }
+        },
+        {
+          "meta": {
+            "negate": false,
+            "index": "logs-platform-*",
+            "key": "uaa.log_category",
+            "value": "Audit",
+            "disabled": false,
+            "alias": null
+          },
+          "query": {
+            "match": {
+              "uaa.log_category": {
+                "query": "Audit",
+                "type": "phrase"
+              }
+            }
+          },
+          "$state": {
+            "store": "appState"
+          }
+        }
+      ],
+      "highlight": {
+        "pre_tags": [
+          "@kibana-highlighted-field@"
+        ],
+        "post_tags": [
+          "@/kibana-highlighted-field@"
+        ],
+        "fields": {
+          "*": {}
+        },
+        "require_field_match": false,
+        "fragment_size": 2147483647
+      },
+      "query": {
+        "query_string": {
+          "analyze_wildcard": true,
+          "query": "*"
+        }
+      }
+    }
+ENDOFFJSON
+%>"
+  }
+}

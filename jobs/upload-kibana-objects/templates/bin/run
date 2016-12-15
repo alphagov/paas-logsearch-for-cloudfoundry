@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -x
+
+# Upload Kibana objects
+<% p("kibana_objects.upload_data_files").each do |object| %>
+cat <%= object %> | curl --data-binary @- http://<%= p('elasticsearch.host') %>:<%= p('elasticsearch.port') %>/_bulk
+<% end %>
