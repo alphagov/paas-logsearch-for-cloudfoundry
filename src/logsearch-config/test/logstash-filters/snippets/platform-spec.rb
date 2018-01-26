@@ -86,6 +86,36 @@ describe "platform.conf" do
       end
     end
 
+    context "RFC 5424 format and enterprise number is CF" do
+      when_parsing_log(
+          "@index_type" => "platform",
+          "@message" => "Some message",
+          "syslog_sd_id" => "instance@47450",
+          "syslog_sd_params" => {
+            "az" => "az1",
+            "deployment" => "deployment1",
+            "director" => "director1",
+            "group" => "group1",
+            "id" => "id1",
+          },
+      ) do
+
+        it { expect(subject["tags"]).to eq ["platform", "cf"] } # no fail tag
+
+        it { expect(subject["@source"]["type"]).to eq "cf" }
+        it { expect(subject["@type"]).to eq "cf" }
+
+        it "sets the common fields" do
+          expect(subject["@message"]).to eq "Some message"
+          expect(subject["@source"]["az"]).to eq "az1"
+          expect(subject["@source"]["deployment"]).to eq "deployment1"
+          expect(subject["@source"]["director"]).to eq "director1"
+          expect(subject["@source"]["id"]).to eq "id1"
+          expect(subject["@source"]["job"]).to eq "group1"
+        end
+      end
+    end
+
     context "not CF format" do
       when_parsing_log(
           "@index_type" => "platform",
