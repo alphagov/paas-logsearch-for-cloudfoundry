@@ -40,6 +40,21 @@ describe "platform-vcap.conf" do
       end
     end
 
+    describe "audispd logs" do
+      when_parsing_log(
+          "@source" => {"component" => "audispd"},
+          "@message" => "Some message"
+      ) do
+
+        # no tags set => 'if' failed
+        it { expect(parsed_results.get("tags")).to be_nil }
+
+        it { expect(parsed_results.get("@type")).to be_nil } # keeps unchanged
+        it { expect(parsed_results.get("@message")).to eq "Some message" } # keeps unchanged
+
+      end
+    end
+
   end
 
   # -- general case
