@@ -15,7 +15,7 @@ describe "platform-vcap.conf" do
 
     describe "passed" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.some_component"}, # good value
+          "@source" => {"component" => "some_component"}, # good value
           "@message" => "Some message"
       ) do
 
@@ -25,17 +25,16 @@ describe "platform-vcap.conf" do
       end
     end
 
-    describe "failed" do
+    describe "uaa logs" do
       when_parsing_log(
-          "@source" => {"component" => "some value"}, # bad value
+          "@source" => {"component" => "uaa"},
           "@message" => "Some message"
       ) do
 
         # no tags set => 'if' failed
         it { expect(parsed_results.get("tags")).to be_nil }
 
-        it { expect(parsed_results.get("@type")).to be_nil } # keeps the same
-        it { expect(parsed_results.get("@source")["component"]).to eq "some value" } # keeps unchanged
+        it { expect(parsed_results.get("@type")).to be_nil } # keeps unchanged
         it { expect(parsed_results.get("@message")).to eq "Some message" } # keeps unchanged
 
       end
@@ -48,7 +47,7 @@ describe "platform-vcap.conf" do
 
     context "plain-text format" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.consul-agent"},
+          "@source" => {"component" => "consul-agent"},
           "@level" => "Dummy level",
           # plain-text format
           "@message" => "2016/07/07 00:56:10 [WARN] agent: Check 'service:routing-api' is now critical"
@@ -72,7 +71,7 @@ describe "platform-vcap.conf" do
 
     context "JSON format" do
       when_parsing_log(
-          "@source"=> { "component" => "vcap.nats" },
+          "@source"=> { "component" => "nats" },
           # JSON format
           "@message" => "{\"timestamp\":1467852972.554088,\"source\":\"NatsStreamForwarder\",\"log_level\":\"info\",\"message\":\"router.register\",\"data\":{\"nats_message\": \"{\\\"uris\\\":[\\\"redis-broker.64.78.234.207.xip.io\\\"],\\\"host\\\":\\\"192.168.111.201\\\",\\\"port\\\":80}\",\"reply_inbox\":\"_INBOX.7e93f2a1d5115844163cc930b5\"}}"
       ) do
@@ -108,7 +107,7 @@ describe "platform-vcap.conf" do
 
     context "JSON format (invalid)" do
       when_parsing_log(
-          "@source" => { "component" => "vcap.nats" },
+          "@source" => { "component" => "nats" },
           "@level" => "Dummy value",
           # JSON format
           "@message" => "{\"timestamp\":14678, abcd}}" # invalid JSON
@@ -134,7 +133,7 @@ describe "platform-vcap.conf" do
 
     context "(DEBUG)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":0}"
       ) do
 
@@ -145,7 +144,7 @@ describe "platform-vcap.conf" do
 
     context "(INFO)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":1}"
       ) do
 
@@ -156,7 +155,7 @@ describe "platform-vcap.conf" do
 
     context "(ERROR)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":2}"
       ) do
 
@@ -167,7 +166,7 @@ describe "platform-vcap.conf" do
 
     context "(FATAL)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":3}"
       ) do
 
@@ -178,7 +177,7 @@ describe "platform-vcap.conf" do
 
     context "(fallback)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":8}" # unknown log level
       ) do
 

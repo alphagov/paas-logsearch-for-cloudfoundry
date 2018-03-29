@@ -15,28 +15,12 @@ describe "platform-uaa.conf" do
 
     describe "passed" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.uaa"}, # good value
+          "@source" => {"component" => "uaa"}, # good value
           "@message" => "Some message"
       ) do
 
         # tag set => 'if' succeeded
         it { expect(parsed_results.get("tags")).to include "uaa" }
-
-      end
-    end
-
-    describe "failed" do
-      when_parsing_log(
-          "@source" => {"component" => "some value"}, # bad value
-          "@message" => "Some message"
-      ) do
-
-        # no tags set => 'if' failed
-        it { expect(parsed_results.get("tags")).to be_nil }
-
-        it { expect(parsed_results.get("@type")).to be_nil } # keeps unchanged
-        it { expect(parsed_results.get("@source")["component"]).to eq "some value" } # keeps unchanged
-        it { expect(parsed_results.get("@message")).to eq "Some message" } # keeps unchanged
 
       end
     end
@@ -49,7 +33,7 @@ describe "platform-uaa.conf" do
     context "UAA" do
       context "(general event)" do
         when_parsing_log(
-            "@source" => {"component" => "vcap.uaa"},
+            "@source" => {"component" => "uaa"},
             # general UAA event
             "@message" => "[2016-07-05 04:02:18.245] uaa - 15178 [http-bio-8080-exec-14] ....  DEBUG --- FilterChainProxy: /healthz has an empty filter list"
         ) do
@@ -73,7 +57,7 @@ describe "platform-uaa.conf" do
 
       context "(bad format)" do
         when_parsing_log(
-            "@source" => {"component" => "vcap.uaa"},
+            "@source" => {"component" => "uaa"},
             "@message" => "Some message" # bad format
         ) do
 
@@ -93,7 +77,7 @@ describe "platform-uaa.conf" do
     context "UAA Audit" do
       context "(general event)" do
         when_parsing_log(
-          "@source" => {"component" => "vcap.uaa"},
+          "@source" => {"component" => "uaa"},
           # general UAA event
           "@message" => "[2016-07-05 04:02:18.245] uaa - 15178 [http-bio-8080-exec-14] ....  INFO --- Audit: ClientAuthenticationSuccess ('Client authentication success'): principal=cf, origin=[remoteAddress=64.78.155.208, clientId=cf], identityZoneId=[uaa]"
         ) do
@@ -131,7 +115,7 @@ describe "platform-uaa.conf" do
 
       context "(PrincipalAuthFailure event)" do
         when_parsing_log(
-            "@source" => {"component" => "vcap.uaa"},
+            "@source" => {"component" => "uaa"},
             # PrincipalAuthFailure event
             "@message" => "[2016-07-06 09:18:43.397] uaa - 15178 [http-bio-8080-exec-6] ....  INFO --- Audit: " +
                 "PrincipalAuthenticationFailure ('null'): principal=admin, origin=[82.209.244.50], identityZoneId=[uaa]"
@@ -170,7 +154,7 @@ describe "platform-uaa.conf" do
 
       context "(bad format)" do
         when_parsing_log(
-            "@source" => {"component" => "vcap.uaa"},
+            "@source" => {"component" => "uaa"},
             "@message" => "[2016-07-06 09:18:43.397] uaa - 15178 [http-bio-8080-exec-6] ....  INFO --- Audit: Some message" # bad format
         ) do
 

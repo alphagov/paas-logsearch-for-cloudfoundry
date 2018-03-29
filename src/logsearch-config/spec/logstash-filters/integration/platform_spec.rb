@@ -29,11 +29,11 @@ describe "Platform IT" do
           .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__metronagent_format(message_payload)
-      sample_event["syslog_program"] = "vcap.consul-agent" # vcap
+      sample_event["syslog_program"] = "consul-agent" # vcap
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__metronagent_format("vcap.consul-agent_relp", "consul-agent", "nfs_z1",
+        verify_platform_cf_fields__metronagent_format("consul-agent_relp", "consul-agent", "nfs_z1",
           "vcap", ["platform", "cf", "vcap"], "Some vcap plain text message", "ERROR")
 
         it { expect(parsed_results.get("consul_agent")).to be_nil } # no json fields
@@ -52,11 +52,11 @@ describe "Platform IT" do
                             .build() # JSON message
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__metronagent_format(message_payload)
-      sample_event["syslog_program"] = "vcap.consul-agent" # vcap
+      sample_event["syslog_program"] = "consul-agent" # vcap
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__metronagent_format("vcap.consul-agent_relp", "consul-agent", "nfs_z1",
+        verify_platform_cf_fields__metronagent_format("consul-agent_relp", "consul-agent", "nfs_z1",
                       "vcap", ["platform", "cf", "vcap"], "router.register", "INFO")
 
         # json fields
@@ -126,11 +126,11 @@ describe "Platform IT" do
                             .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__metronagent_format(message_payload)
-      sample_event["syslog_program"] = "vcap.uaa" # uaa
+      sample_event["syslog_program"] = "uaa" # uaa
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__metronagent_format("vcap.uaa_relp", "uaa", "uaa_z0",
+        verify_platform_cf_fields__metronagent_format("uaa_relp", "uaa", "uaa_z0",
                       "uaa", ["platform", "cf", "uaa"],
                       "/healthz has an empty filter list", "DEBUG")
 
@@ -151,11 +151,11 @@ describe "Platform IT" do
                             .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__metronagent_format(message_payload)
-      sample_event["syslog_program"] = "vcap.uaa" # uaa
+      sample_event["syslog_program"] = "uaa" # uaa
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__metronagent_format("vcap.uaa_relp", "uaa", "uaa_z0",
+        verify_platform_cf_fields__metronagent_format("uaa_relp", "uaa", "uaa_z0",
                                   "uaa-audit", ["platform", "cf", "uaa", "audit"],
                                   "ClientAuthenticationSuccess ('Client authentication success')", "INFO")
 
@@ -196,11 +196,11 @@ describe "Platform IT" do
                             .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__syslogrelease_format(message_payload)
-      sample_event["syslog_program"] = "vcap.consul-agent" # vcap
+      sample_event["syslog_program"] = "consul-agent" # vcap
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__syslogrelease_format("vcap.consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
+        verify_platform_cf_fields__syslogrelease_format("consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
                                   "vcap", ["platform", "cf", "vcap"], "Some vcap plain text message", "ERROR")
 
         it { expect(parsed_results.get("consul_agent")).to be_nil } # no json fields
@@ -220,11 +220,11 @@ describe "Platform IT" do
                             .build() # JSON message
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__syslogrelease_format(message_payload)
-      sample_event["syslog_program"] = "vcap.consul-agent" # vcap
+      sample_event["syslog_program"] = "consul-agent" # vcap
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__syslogrelease_format("vcap.consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
+        verify_platform_cf_fields__syslogrelease_format("consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
                                   "vcap", ["platform", "cf", "vcap"], "router.register", "INFO")
 
         # json fields
@@ -296,11 +296,11 @@ describe "Platform IT" do
                             .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__syslogrelease_format(message_payload)
-      sample_event["syslog_program"] = "vcap.uaa" # uaa
+      sample_event["syslog_program"] = "uaa" # uaa
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__syslogrelease_format("vcap.uaa_relp", "cf_full", "uaa", "uaa_z0",
+        verify_platform_cf_fields__syslogrelease_format("uaa_relp", "cf_full", "uaa", "uaa_z0",
                                   "uaa", ["platform", "cf", "uaa"],
                                   "/healthz has an empty filter list", "DEBUG")
 
@@ -322,11 +322,11 @@ describe "Platform IT" do
                             .build()
       sample_event = platform_event_dummy.clone
       sample_event["@message"] = construct_cf_message__syslogrelease_format(message_payload)
-      sample_event["syslog_program"] = "vcap.uaa" # uaa
+      sample_event["syslog_program"] = "uaa" # uaa
 
       when_parsing_log(sample_event) do
 
-        verify_platform_cf_fields__syslogrelease_format("vcap.uaa_relp", "cf_full", "uaa", "uaa_z0",
+        verify_platform_cf_fields__syslogrelease_format("uaa_relp", "cf_full", "uaa", "uaa_z0",
                                   "uaa-audit", ["platform", "cf", "uaa", "audit"],
                                   "ClientAuthenticationSuccess ('Client authentication success')", "INFO")
 
@@ -372,4 +372,3 @@ describe "Platform IT" do
   end
 
 end
-
