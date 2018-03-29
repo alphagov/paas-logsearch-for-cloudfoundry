@@ -34,7 +34,7 @@ describe "Platform IT" do
       when_parsing_log(sample_event) do
 
         verify_platform_cf_fields__metronagent_format("consul-agent_relp", "consul-agent", "nfs_z1",
-          "vcap", ["platform", "cf", "vcap"], "Some vcap plain text message", "ERROR")
+          "cf", ["platform", "cf"], "Some vcap plain text message", "ERROR")
 
         it { expect(parsed_results.get("consul_agent")).to be_nil } # no json fields
 
@@ -57,7 +57,7 @@ describe "Platform IT" do
       when_parsing_log(sample_event) do
 
         verify_platform_cf_fields__metronagent_format("consul-agent_relp", "consul-agent", "nfs_z1",
-                      "vcap", ["platform", "cf", "vcap"], "router.register", "INFO")
+                      "cf", ["platform", "cf"], "router.register", "INFO")
 
         # json fields
         it "sets fields from JSON" do
@@ -201,7 +201,7 @@ describe "Platform IT" do
       when_parsing_log(sample_event) do
 
         verify_platform_cf_fields__syslogrelease_format("consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
-                                  "vcap", ["platform", "cf", "vcap"], "Some vcap plain text message", "ERROR")
+                                  "cf", ["platform", "cf"], "Some vcap plain text message", "ERROR")
 
         it { expect(parsed_results.get("consul_agent")).to be_nil } # no json fields
 
@@ -225,7 +225,7 @@ describe "Platform IT" do
       when_parsing_log(sample_event) do
 
         verify_platform_cf_fields__syslogrelease_format("consul-agent_relp", "cf_full", "consul-agent", "nfs_z1",
-                                  "vcap", ["platform", "cf", "vcap"], "router.register", "INFO")
+                                  "cf", ["platform", "cf"], "router.register", "INFO")
 
         # json fields
         it "sets fields from JSON" do

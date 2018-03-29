@@ -13,18 +13,6 @@ describe "platform-vcap.conf" do
 
   describe "#if" do
 
-    describe "passed" do
-      when_parsing_log(
-          "@source" => {"component" => "some_component"}, # good value
-          "@message" => "Some message"
-      ) do
-
-        # tag set => 'if' succeeded
-        it { expect(parsed_results.get("tags")).to include "vcap" }
-
-      end
-    end
-
     describe "uaa logs" do
       when_parsing_log(
           "@source" => {"component" => "uaa"},
@@ -68,10 +56,6 @@ describe "platform-vcap.conf" do
           "@message" => "2016/07/07 00:56:10 [WARN] agent: Check 'service:routing-api' is now critical"
       ) do
 
-        it { expect(parsed_results.get("tags")).to eq ["vcap"] } # vcap tag, no fail tag
-
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
-
         it { expect(parsed_results.get("@source")["component"]).to eq "consul-agent" }
 
         it { expect(parsed_results.get("@message"))
@@ -92,10 +76,6 @@ describe "platform-vcap.conf" do
       ) do
 
         # no parsing errors
-        it { expect(parsed_results.get("tags")).to eq ["vcap"] } # vcap tag, no fail tag
-
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
-
         it { expect(parsed_results.get("@source")["component"]).to eq "nats" }
 
         it "sets JSON fields" do
@@ -129,9 +109,8 @@ describe "platform-vcap.conf" do
       ) do
 
         # parsing error
-        it { expect(parsed_results.get("tags")).to eq ["vcap", "fail/cloudfoundry/platform-vcap/json"] }
+        it { expect(parsed_results.get("tags")).to eq ["fail/cloudfoundry/platform-vcap/json"] }
 
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
         it { expect(parsed_results.get("@message")).to eq "{\"timestamp\":14678, abcd}}" } # keeps unchanged
         it { expect(parsed_results.get("@source")["component"]).to eq "nats" } # keeps unchanged
         it { expect(parsed_results.get("@level")).to eq "Dummy value" } # keeps unchanged
