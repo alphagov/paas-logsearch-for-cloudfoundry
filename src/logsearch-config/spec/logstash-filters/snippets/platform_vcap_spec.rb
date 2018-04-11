@@ -13,29 +13,31 @@ describe "platform-vcap.conf" do
 
   describe "#if" do
 
-    describe "passed" do
+    describe "uaa logs" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.some_component"}, # good value
-          "@message" => "Some message"
-      ) do
-
-        # tag set => 'if' succeeded
-        it { expect(parsed_results.get("tags")).to include "vcap" }
-
-      end
-    end
-
-    describe "failed" do
-      when_parsing_log(
-          "@source" => {"component" => "some value"}, # bad value
+          "@source" => {"component" => "uaa"},
           "@message" => "Some message"
       ) do
 
         # no tags set => 'if' failed
         it { expect(parsed_results.get("tags")).to be_nil }
 
-        it { expect(parsed_results.get("@type")).to be_nil } # keeps the same
-        it { expect(parsed_results.get("@source")["component"]).to eq "some value" } # keeps unchanged
+        it { expect(parsed_results.get("@type")).to be_nil } # keeps unchanged
+        it { expect(parsed_results.get("@message")).to eq "Some message" } # keeps unchanged
+
+      end
+    end
+
+    describe "audispd logs" do
+      when_parsing_log(
+          "@source" => {"component" => "audispd"},
+          "@message" => "Some message"
+      ) do
+
+        # no tags set => 'if' failed
+        it { expect(parsed_results.get("tags")).to be_nil }
+
+        it { expect(parsed_results.get("@type")).to be_nil } # keeps unchanged
         it { expect(parsed_results.get("@message")).to eq "Some message" } # keeps unchanged
 
       end
@@ -48,15 +50,11 @@ describe "platform-vcap.conf" do
 
     context "plain-text format" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.consul-agent"},
+          "@source" => {"component" => "consul-agent"},
           "@level" => "Dummy level",
           # plain-text format
           "@message" => "2016/07/07 00:56:10 [WARN] agent: Check 'service:routing-api' is now critical"
       ) do
-
-        it { expect(parsed_results.get("tags")).to eq ["vcap"] } # vcap tag, no fail tag
-
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
 
         it { expect(parsed_results.get("@source")["component"]).to eq "consul-agent" }
 
@@ -72,16 +70,12 @@ describe "platform-vcap.conf" do
 
     context "JSON format" do
       when_parsing_log(
-          "@source"=> { "component" => "vcap.nats" },
+          "@source"=> { "component" => "nats" },
           # JSON format
           "@message" => "{\"timestamp\":1467852972.554088,\"source\":\"NatsStreamForwarder\",\"log_level\":\"info\",\"message\":\"router.register\",\"data\":{\"nats_message\": \"{\\\"uris\\\":[\\\"redis-broker.64.78.234.207.xip.io\\\"],\\\"host\\\":\\\"192.168.111.201\\\",\\\"port\\\":80}\",\"reply_inbox\":\"_INBOX.7e93f2a1d5115844163cc930b5\"}}"
       ) do
 
         # no parsing errors
-        it { expect(parsed_results.get("tags")).to eq ["vcap"] } # vcap tag, no fail tag
-
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
-
         it { expect(parsed_results.get("@source")["component"]).to eq "nats" }
 
         it "sets JSON fields" do
@@ -108,16 +102,15 @@ describe "platform-vcap.conf" do
 
     context "JSON format (invalid)" do
       when_parsing_log(
-          "@source" => { "component" => "vcap.nats" },
+          "@source" => { "component" => "nats" },
           "@level" => "Dummy value",
           # JSON format
           "@message" => "{\"timestamp\":14678, abcd}}" # invalid JSON
       ) do
 
         # parsing error
-        it { expect(parsed_results.get("tags")).to eq ["vcap", "fail/cloudfoundry/platform-vcap/json"] }
+        it { expect(parsed_results.get("tags")).to eq ["fail/cloudfoundry/platform-vcap/json"] }
 
-        it { expect(parsed_results.get("@type")).to eq "vcap" }
         it { expect(parsed_results.get("@message")).to eq "{\"timestamp\":14678, abcd}}" } # keeps unchanged
         it { expect(parsed_results.get("@source")["component"]).to eq "nats" } # keeps unchanged
         it { expect(parsed_results.get("@level")).to eq "Dummy value" } # keeps unchanged
@@ -134,7 +127,7 @@ describe "platform-vcap.conf" do
 
     context "(DEBUG)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":0}"
       ) do
 
@@ -145,7 +138,7 @@ describe "platform-vcap.conf" do
 
     context "(INFO)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":1}"
       ) do
 
@@ -156,7 +149,7 @@ describe "platform-vcap.conf" do
 
     context "(ERROR)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":2}"
       ) do
 
@@ -167,7 +160,7 @@ describe "platform-vcap.conf" do
 
     context "(FATAL)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":3}"
       ) do
 
@@ -178,7 +171,7 @@ describe "platform-vcap.conf" do
 
     context "(fallback)" do
       when_parsing_log(
-          "@source" => {"component" => "vcap.dummy"},
+          "@source" => {"component" => "dummy"},
           "@message" => "{\"log_level\":8}" # unknown log level
       ) do
 
